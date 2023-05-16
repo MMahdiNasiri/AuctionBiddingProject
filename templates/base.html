@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="en" dir="rtl">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000"/>
+
+      <title>Serico</title>
+  </head>
+  <body>
+{#    {% include "macros/navbar.html" %}#}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top custom-nav">
+    <a class="navbar-brand ms-4 me-4" href="">Serico</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">خروج</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link {% block login %}{% endblock %}" href="{% url 'login' %}">ورود</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% block register %}{% endblock %}" href="{% url 'register' %}">ثبت نام</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+    {% block header %}
+    {% endblock %}
+    <div>
+        <div class="col-2">
+            {% block sidebar %}
+            {% endblock %}
+        </div>
+        <div class="container col-7 pt-4">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <div class="col-2"></div>
+    </div>
+    {% block js %}
+    {% endblock js %}
+    </body>
+</html>
