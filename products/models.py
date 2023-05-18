@@ -33,7 +33,7 @@ class Products(models.Model):
     seller = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, blank=False)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.DO_NOTHING, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     deleted = models.IntegerField(default=0)
 
     def __str__(self):
