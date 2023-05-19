@@ -28,16 +28,35 @@ class SubCategory(models.Model):
 
 
 class Products(models.Model):
+    INIT = 'init'
+    STOCK = "stock"
+    SOLD = "sold"
+    DELIVERED = "delivered"
+    PRODUCT_STATUS_CHOICES = [
+        (INIT, "Init"),
+        (STOCK, "Stock"),
+        (SOLD, "Sold"),
+        (DELIVERED, "Delivered"),
+    ]
+
     name = models.CharField(max_length=50)
     description = models.TextField()
     seller = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, blank=False)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.DO_NOTHING, null=False, blank=False)
+    status = models.CharField(
+        max_length=10,
+        choices=PRODUCT_STATUS_CHOICES,
+        default=INIT,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     deleted = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
+
+    def editable(self):
+        return self.status in {self.INIT, self.STOCK}
 
     class Meta:
         indexes = [
