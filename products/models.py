@@ -66,7 +66,7 @@ class Products(models.Model):
     ):
 
         super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
-        print(self.id, self.hashId)
+
         if not self.hashId:
             self.hashId = hashlib.blake2b(repr(self.id).encode(), digest_size=6).hexdigest()
             super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
