@@ -1,3 +1,5 @@
+import hashlib
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -51,12 +53,23 @@ class Products(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     deleted = models.IntegerField(default=0)
+    hashId = models.CharField(max_length=12)
 
     def __str__(self):
         return self.name
 
     def editable(self):
         return self.status in {self.INIT, self.STOCK}
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+
+        super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+        print(self.id, self.hashId)
+        if not self.hashId:
+            self.hashId = hashlib.blake2b(repr(self.id).encode(), digest_size=6).hexdigest()
+            super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     class Meta:
         indexes = [
