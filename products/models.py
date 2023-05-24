@@ -9,19 +9,11 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=30)
     logo = models.ImageField(upload_to='logo')
-
-    def __str__(self):
-        return self.name
-
-
-class SubCategory(models.Model):
-    name = models.CharField(max_length=30)
-    logo = models.ImageField(upload_to='logo')
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=False, blank=False)
+    parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     class Meta:
         indexes = [
-            models.Index(fields=['category', ]),
+            models.Index(fields=['parent', ]),
             models.Index(fields=['name', ])
         ]
 
@@ -44,7 +36,7 @@ class Products(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     seller = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, blank=False)
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.DO_NOTHING, null=False, blank=False)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=False, blank=False)
     status = models.CharField(
         max_length=10,
         choices=PRODUCT_STATUS_CHOICES,
@@ -74,7 +66,7 @@ class Products(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=['name', 'deleted', ]),
-            models.Index(fields=['sub_category', 'deleted']),
+            models.Index(fields=['category', 'deleted']),
             models.Index(fields=['seller', 'deleted']),
         ]
 
