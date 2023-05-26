@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block header %}
+    <h2>Products</h2>
+{% endblock %}
+
+{% block content %}
+    <ul>
+            <li>{{ product.name }}</li>
+            <li>{{ product.description }}</li>
+            <li>{{ product.seller }}</li>
+            <li>{{ product.category }}</li>
+            <li>{{ product.status }}</li>
+    </ul>
+{% endblock %}
