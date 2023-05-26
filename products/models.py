@@ -2,6 +2,10 @@ import hashlib
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.text import slugify
+
 
 # Create your models here.
 
@@ -42,10 +46,10 @@ class Products(models.Model):
         choices=PRODUCT_STATUS_CHOICES,
         default=INIT,
     )
+    identifier = models.SlugField(unique=True, max_length=12, allow_unicode=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     deleted = models.IntegerField(default=0)
-    hashId = models.CharField(max_length=12)
 
     def __str__(self):
         return self.name
@@ -56,12 +60,13 @@ class Products(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-
+        if not self.identifier:
+            slug = f'{self.name}{self.seller}{timezone.now()}'
+            self.identifier = slugify(hashlib.blake2b(slug.encode(), digest_size=6).hexdigest())
         super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
 
-        if not self.hashId:
-            self.hashId = hashlib.blake2b(repr(self.id).encode(), digest_size=6).hexdigest()
-            super(Products, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
+    def get_absolute_url(self):
+        return reverse("product-detail", kwargs={"slug": self.identifier})
 
     class Meta:
         indexes = [
