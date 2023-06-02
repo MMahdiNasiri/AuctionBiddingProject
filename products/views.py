@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from rest_framework import filters, mixins
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import ProductSerializer, CategorySerializer, ProductPictureSerializer
 from .models import Products, Category, ProductPictures
@@ -14,9 +14,9 @@ class ProductViewSet(ModelViewSet):
     # it's better to change owner or read only
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = ProductSerializer
-    queryset = Products.objects.filter(deleted=0)
-    # filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    # search_fields = ["content"]
+    queryset = Products.objects.filter(deleted=0).order_by('-id')
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ["description", "name"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -25,7 +25,8 @@ class ProductViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     serializer_class = CategorySerializer
-    queryset = Category.objects.filter(deleted=0)
+    queryset = Category.objects.filter(deleted=0).order_by('-id')
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -38,7 +39,7 @@ class PictureViewSet(ModelViewSet):
 
 
 class ProductsListView(ListView):
-    queryset = Products.objects.filter(deleted=0)
+    queryset = Products.objects.filter(deleted=0).order_by('-id')
     context_object_name = "products"
 
 
@@ -55,4 +56,4 @@ class SellerProductsListView(ListView):
 
     def get_queryset(self):
         seller = get_object_or_404(User, username=self.kwargs["seller"])
-        return Products.objects.filter(seller=seller)
+        return Products.objects.filter(seller=seller).order_by('-id')
