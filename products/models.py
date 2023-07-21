@@ -22,12 +22,12 @@ class Products(BaseModel):
     INIT = 'init'
     STOCK = "stock"
     SOLD = "sold"
-    DELIVERED = "delivered"
+    BIDDING = "bidding"
     PRODUCT_STATUS_CHOICES = [
         (INIT, "Init"),
         (STOCK, "Stock"),
         (SOLD, "Sold"),
-        (DELIVERED, "Delivered"),
+        (BIDDING, "Bidding"),
     ]
 
     name = models.CharField(max_length=50)
