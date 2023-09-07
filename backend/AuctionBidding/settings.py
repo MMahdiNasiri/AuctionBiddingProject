@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'products.apps.ProductsConfig',
     'profiles.apps.ProfilesConfig',
+    'bids.apps.BidsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken'
+    # 'rest_framework.authtoken',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ASGI_APPLICATION = 'AuctionBidding.asgi.application'
