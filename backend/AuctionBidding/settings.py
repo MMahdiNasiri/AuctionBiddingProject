@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'profiles.apps.ProfilesConfig',
     'bids.apps.BidsConfig',
-
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
